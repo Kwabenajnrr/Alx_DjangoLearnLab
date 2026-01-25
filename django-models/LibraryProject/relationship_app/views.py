@@ -1,6 +1,7 @@
 from django.http import HttpResponse
-from django.views.generic import DetailView
+from django.views.generic.detail import DetailView
 from .models import Library
+
 
 
 class LibraryDetailView(DetailView):
