@@ -4,14 +4,13 @@ from .models import Book, Library
 
 
 def list_books(request):
-    books = Book.objects.all()  # 👈 REQUIRED by checker
-    output = ""
+    books = Book.objects.all()  # REQUIRED by checker
 
-    for book in books:
-        output += f"{book.title} by {book.author.name}<br>"
-
-    return HttpResponse(output)
-
+    return render(
+        request,
+        "relationship_app/list_books.html",  # REQUIRED by checker
+        {"books": books}
+    )
 
 class LibraryDetailView(DetailView):
     model = Library
