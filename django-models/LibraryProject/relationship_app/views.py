@@ -1,10 +1,40 @@
-from django.shortcuts import render
 from django.views.generic.detail import DetailView
 from .models import Library, Book  # import both models
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
+from django.shortcuts import render
+from django.contrib.auth.decorators import user_passes_test
+
+# Helper functions to check roles
+def is_admin(user):
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
+
+def is_librarian(user):
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'
+
+def is_member(user):
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
+
+
+# Admin view
+@user_passes_test(is_admin)
+def admin_view(request):
+    return render(request, 'relationship_app/admin_view.html')
+
+
+# Librarian view
+@user_passes_test(is_librarian)
+def librarian_view(request):
+    return render(request, 'relationship_app/librarian_view.html')
+
+
+# Member view
+@user_passes_test(is_member)
+def member_view(request):
+    return render(request, 'relationship_app/member_view.html')
+
 
 
 
@@ -46,8 +76,8 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    messages.info(request, "You have been logged out.")
-    return render(request, 'relationship_app/logout.html')
+    messages.success(request, "You have successfully logged out.")
+    return redirect('login')
 
 
 
