@@ -122,6 +122,32 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# =====================================
+# HTTPS & SECURITY CONFIGURATION
+# =====================================
+
+# Force HTTPS redirects
+SECURE_SSL_REDIRECT = True
+
+# HTTP Strict Transport Security (HSTS)
+# Instructs browsers to always use HTTPS
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# Secure cookies (HTTPS only)
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# Security headers
+X_FRAME_OPTIONS = "DENY"  # Prevent clickjacking
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevent MIME sniffing
+SECURE_BROWSER_XSS_FILTER = True  # Enable XSS protection
+
+
+
+
+
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'yourdomain.com']
 
 # Browser security headers
