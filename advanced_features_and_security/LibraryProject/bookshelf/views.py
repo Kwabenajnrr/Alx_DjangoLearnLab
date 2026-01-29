@@ -2,6 +2,16 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import permission_required
 from .models import Book
 from .forms import BookForm
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+
+from .forms import ExampleForm  
+
+def example_form_view(request):
+    form = ExampleForm()
+    return render(request, 'bookshelf/form_example.html', {'form': form})
+
+
 
 # List books safely
 def book_list(request):
