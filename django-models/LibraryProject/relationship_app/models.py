@@ -3,66 +3,10 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-class Book(models.Model):
-    title = models.CharField(max_length=200)
-    author = models.CharField(max_length=100)
-    published_date = models.DateField()
 
-    def __str__(self):
-        return self.title
-
-    class Meta:
-        permissions = (
-            ("can_add_book", "Can add book"),
-            ("can_change_book", "Can change book"),
-            ("can_delete_book", "Can delete book"),
-        )
-
-
-
-
-
-
-class Book(models.Model):
-    title = models.CharField(max_length=200)
-    author = models.CharField(max_length=100)
-    published_date = models.DateField()
-    isbn = models.CharField(max_length=13)
-    # add other fields as needed
-
-    def __str__(self):
-        return self.title
-
-    class Meta:
-        permissions = [
-            ("can_add_book", "Can add a book"),
-            ("can_change_book", "Can change a book"),
-            ("can_delete_book", "Can delete a book"),
-        ]
-
-
-
-class UserProfile(models.Model):
-    ROLE_CHOICES = [
-        ('Admin', 'Admin'),
-        ('Librarian', 'Librarian'),
-        ('Member', 'Member'),
-    ]
-    
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='Member')
-
-    def __str__(self):
-        return f"{self.user.username} - {self.role}"
-
-
-# Signal to automatically create a UserProfile whenever a User is created
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.create(user=instance)
-
-
+# -------------------------
+# AUTHOR
+# -------------------------
 class Author(models.Model):
     name = models.CharField(max_length=100)
 
@@ -70,14 +14,53 @@ class Author(models.Model):
         return self.name
 
 
+# -------------------------
+# BOOK (ONLY ONE!)
+# -------------------------
 class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    published_date = models.DateField()
+    isbn = models.CharField(max_length=13)
 
     def __str__(self):
         return self.title
 
+    class Meta:
+        permissions = [
+            ("can_add_book", "Can add book"),
+            ("can_change_book", "Can change book"),
+            ("can_delete_book", "Can delete book"),
+        ]
 
+
+# -------------------------
+# USER PROFILE (ROLES)
+# -------------------------
+class UserProfile(models.Model):
+    ROLE_CHOICES = [
+        ('Admin', 'Admin'),
+        ('Librarian', 'Librarian'),
+        ('Member', 'Member'),
+    ]
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='Member')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.role}"
+
+
+# Auto-create profile when user is created
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+
+
+# -------------------------
+# LIBRARY
+# -------------------------
 class Library(models.Model):
     name = models.CharField(max_length=100)
     books = models.ManyToManyField(Book)
@@ -86,11 +69,12 @@ class Library(models.Model):
         return self.name
 
 
+# -------------------------
+# LIBRARIAN
+# -------------------------
 class Librarian(models.Model):
     name = models.CharField(max_length=100)
     library = models.OneToOneField(Library, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
-
-
