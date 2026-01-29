@@ -1,18 +1,22 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser
+from .models import CustomUser  # Make sure this points to your custom user model
 
-
-@admin.register(CustomUser)
+# Custom admin class for CustomUser
 class CustomUserAdmin(UserAdmin):
+    model = CustomUser
+    list_display = ("username", "email", "first_name", "last_name", "date_of_birth", "is_staff", "is_active")
+    list_filter = ("is_staff", "is_active")
+    
     fieldsets = UserAdmin.fieldsets + (
-        ("Additional Fields", {
-            "fields": ("date_of_birth", "profile_photo"),
-        }),
+        (None, {"fields": ("date_of_birth", "profile_photo")}),
     )
-
     add_fieldsets = UserAdmin.add_fieldsets + (
-        ("Additional Fields", {
-            "fields": ("date_of_birth", "profile_photo"),
-        }),
+        (None, {"fields": ("date_of_birth", "profile_photo")}),
     )
+    
+    search_fields = ("username", "email")
+    ordering = ("username",)
+
+# ✅ Register the custom user model with the custom admin
+admin.site.register(CustomUser, CustomUserAdmin)
