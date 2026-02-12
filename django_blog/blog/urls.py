@@ -15,6 +15,8 @@ from .views import (
 )
 from .views import SearchResultsView, TagPostListView
 
+"tags/<slug:tag_slug>/", "PostByTagListView.as_view()"
+
 path('search/', SearchResultsView.as_view(), name='search-results'),
 path('tags/<str:tag_name>/', TagPostListView.as_view(), name='tag-posts'),
 
