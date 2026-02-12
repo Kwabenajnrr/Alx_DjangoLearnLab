@@ -13,6 +13,10 @@ from .views import (
     CommentUpdateView,
     CommentDeleteView,
 )
+from .views import SearchResultsView, TagPostListView
+
+path('search/', SearchResultsView.as_view(), name='search-results'),
+path('tags/<str:tag_name>/', TagPostListView.as_view(), name='tag-posts'),
 
 
 "post/<int:pk>/delete/", "post/<int:pk>/update/", "post/new/"
