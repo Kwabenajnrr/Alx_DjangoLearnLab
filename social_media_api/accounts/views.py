@@ -16,7 +16,7 @@ User = get_user_model()
 
 
 @api_view(['POST'])
-@permission_classes([permissions.IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def follow_user(request, user_id):
     try:
         user_to_follow = User.objects.get(id=user_id)
