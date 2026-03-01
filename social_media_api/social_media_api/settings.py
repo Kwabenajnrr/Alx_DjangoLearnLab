@@ -28,7 +28,7 @@ DEBUG = False
 ALLOWED_HOSTS = ['yourapp.herokuapp.com', '127.0.0.1']
 
 ["PORT"]
-
+["STATIC_ROOT"]
 # Application definition
 
 INSTALLED_APPS = [
